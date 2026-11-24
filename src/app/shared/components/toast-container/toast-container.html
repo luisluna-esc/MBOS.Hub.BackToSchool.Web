@@ -1,0 +1,89 @@
+<div class="pointer-events-none fixed top-[calc(env(safe-area-inset-top)+4.25rem)] right-4 left-4 z-[1100] mx-auto flex w-auto max-w-[26rem] flex-col gap-3 md:top-auto md:bottom-4 md:left-auto md:w-[min(92vw,26rem)] md:flex-col-reverse">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div
+      class="pointer-events-auto flex items-start gap-3 overflow-hidden rounded-lg border border-t-4 border-border bg-surface px-4 py-3.5 shadow-xl"
+      [class.border-t-success]="toast.type === 'success'"
+      [class.border-t-danger]="toast.type === 'error'"
+      [class.border-t-warning]="toast.type === 'warning'"
+      [class.border-t-info]="toast.type === 'info'"
+      [attr.role]="toast.type === 'error' ? 'alert' : 'status'"
+    >
+      <span
+        class="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full"
+        [class.text-success]="toast.type === 'success'"
+        [class.bg-success/15]="toast.type === 'success'"
+        [class.text-danger]="toast.type === 'error'"
+        [class.bg-danger/15]="toast.type === 'error'"
+        [class.text-warning]="toast.type === 'warning'"
+        [class.bg-warning/15]="toast.type === 'warning'"
+        [class.text-info]="toast.type === 'info'"
+        [class.bg-info/15]="toast.type === 'info'"
+        aria-hidden="true"
+      >
+        @switch (toast.type) {
+          @case ('success') {
+            <svg viewBox="0 0 24 24" fill="none" class="size-5">
+              <path d="M5 12.5L10 17.5L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          }
+          @case ('error') {
+            <svg viewBox="0 0 24 24" fill="none" class="size-5">
+              <path d="M15 9L9 15M9 9L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+          }
+          @case ('warning') {
+            <svg viewBox="0 0 24 24" fill="none" class="size-5">
+              <path d="M12 9V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <circle cx="12" cy="16.5" r="1" fill="currentColor" />
+              <path d="M10.3 4.2L2.9 17.5C2.2 18.8 3.1 20.4 4.6 20.4H19.4C20.9 20.4 21.8 18.8 21.1 17.5L13.7 4.2C13 2.9 11 2.9 10.3 4.2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+            </svg>
+          }
+          @default {
+            <svg viewBox="0 0 24 24" fill="none" class="size-5">
+              <path d="M12 11V16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <circle cx="12" cy="7.8" r="1" fill="currentColor" />
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+          }
+        }
+      </span>
+      <div class="min-w-0 flex-1 pt-1">
+        <p class="text-sm font-semibold leading-snug text-foreground">{{ toast.message }}</p>
+        @if (toast.description) {
+          <p class="mt-1 text-sm text-muted-foreground">{{ toast.description }}</p>
+        }
+        @if (toast.items?.length) {
+          <ul class="mt-2 flex flex-col gap-1.5">
+            @for (item of toast.items; track $index) {
+              <li class="flex items-center justify-between gap-2 rounded-md border border-border bg-background px-2.5 py-1.5">
+                <div class="min-w-0">
+                  <p class="truncate text-sm font-semibold text-foreground">{{ item.document }}</p>
+                  <p class="truncate text-xs text-muted-foreground">{{ item.label }}</p>
+                </div>
+                <button
+                  type="button"
+                  class="shrink-0 rounded-md border border-border px-2 py-1 text-xs text-foreground transition-colors hover:bg-surface"
+                  [attr.aria-label]="('inbox.toast.copy' | translate) + ' ' + item.copy"
+                  (click)="copy(toast.id, $index, item)"
+                >
+                  {{ (copiedKey() === toast.id + ':' + $index ? 'inbox.toast.copied' : 'inbox.toast.copy') | translate }}
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+      <button
+        type="button"
+        class="shrink-0 rounded p-1 text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+        aria-label="Cerrar notificación"
+        (click)="toastService.dismiss(toast.id)"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-4">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+  }
+</div>

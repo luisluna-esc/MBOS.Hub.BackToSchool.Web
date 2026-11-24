@@ -1,0 +1,478 @@
+@if (loading()) {
+  <div class="flex flex-col gap-3">
+    @for (i of [1, 2, 3, 4]; track i) {
+      <div class="h-16 animate-pulse rounded-lg bg-surface"></div>
+    }
+  </div>
+} @else if (errorCode()) {
+  <div class="rounded-lg border border-border bg-surface">
+    <app-error-state [code]="errorCode()!" actionLabel="Reintentar" (action)="load(true)" />
+  </div>
+} @else if (created(); as order) {
+  <!-- ======================= Pedido enviado: número de ficha ======================= -->
+  <div class="mx-auto flex max-w-md flex-col items-center gap-5 py-6 text-center">
+    <div class="flex size-16 items-center justify-center rounded-full bg-success/15 text-success">
+      <app-icon name="verified-check" size="size-10" />
+    </div>
+    <p class="text-sm text-muted-foreground">Pedido enviado a almacén</p>
+    <div class="w-full rounded-2xl bg-primary px-6 py-8 text-primary-foreground shadow-lg">
+      <p class="text-sm font-semibold tracking-widest uppercase opacity-80">Ficha N°</p>
+      <p class="text-8xl leading-none font-bold">{{ order.ticketNumber }}</p>
+      <p class="mt-3 text-lg font-semibold">Bs {{ money(order.total) }}</p>
+      <p class="text-sm opacity-80">{{ order.itemCount }} artículos · {{ order.customerName }}</p>
+    </div>
+    <p class="text-sm text-muted-foreground">Entregue al papá la ficha con este número. Caja lo llamará por él.</p>
+    <div class="flex w-full flex-col gap-2">
+      <button type="button" class="flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 font-semibold text-primary-foreground" (click)="startNew(false)">
+        <app-icon name="cart-plus" /> Nuevo pedido
+      </button>
+      <button type="button" class="flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-4 py-3 font-medium text-foreground" (click)="startNew(true)">
+        <app-icon name="add-square" /> Agregar algo más para el mismo papá (nueva ficha)
+      </button>
+      <a routerLink="/orders" class="py-2 text-sm text-accent underline">Ver mis pedidos de hoy</a>
+    </div>
+  </div>
+} @else {
+  <div class="mx-auto flex max-w-3xl flex-col gap-4 pb-28">
+    <!-- ======================= Pestañas ======================= -->
+    <div class="flex items-center justify-between gap-2">
+      <h1 class="text-xl font-semibold text-foreground">Nuevo pedido</h1>
+      <button type="button" class="flex items-center gap-1 text-sm text-muted-foreground" (click)="clearOrder()"><app-icon name="trash-bin-trash" size="size-4" /> Limpiar</button>
+    </div>
+
+    <!-- Indicador de pasos: hechos con ✓ verde, el actual resaltado, la línea se va llenando.
+         Se puede volver a un paso ya visitado, pero no saltar adelante. -->
+    <nav class="flex items-start" aria-label="Pasos del pedido">
+      @for (s of steps; track s.id; let i = $index; let last = $last) {
+        @let done = i < stepIndex();
+        @let current = i === stepIndex();
+        @let locked = i > reached();
+        <button
+          type="button"
+          class="flex w-12 shrink-0 flex-col items-center gap-1 disabled:cursor-not-allowed sm:w-16"
+          [disabled]="locked"
+          [attr.aria-current]="current ? 'step' : null"
+          (click)="goTo(s.id)"
+        >
+          <span
+            class="relative flex size-8 items-center justify-center rounded-full border-2 text-sm font-semibold transition-all duration-300"
+            [class]="
+              done
+                ? 'border-success bg-success text-white'
+                : current
+                  ? 'scale-110 border-primary bg-primary text-primary-foreground shadow-md'
+                  : 'border-border bg-surface text-muted-foreground'
+            "
+          >
+            @if (done) {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="size-4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            } @else {
+              {{ i + 1 }}
+            }
+            @if (stepCounts()[s.id] > 0 && s.id !== 'summary') {
+              <span class="absolute -top-1.5 -right-1.5 min-w-4 rounded-full bg-accent px-1 text-[10px] leading-4 text-white">{{ stepCounts()[s.id] }}</span>
+            }
+          </span>
+          <span
+            class="text-center text-[10px] leading-tight sm:text-xs"
+            [class.font-semibold]="current"
+            [class.text-foreground]="current || done"
+            [class.text-muted-foreground]="!current && !done"
+          >{{ s.label }}</span>
+        </button>
+        @if (!last) {
+          <!-- Tramo hacia el siguiente paso: lleno si ya se pasó, a medias si es el paso actual -->
+          <span class="mt-4 h-1 min-w-2 flex-1 overflow-hidden rounded-full bg-border">
+            <span
+              class="block h-full rounded-full bg-success transition-[width] duration-500 ease-out"
+              [style.width]="done ? '100%' : current ? '30%' : '0%'"
+            ></span>
+          </span>
+        }
+      }
+    </nav>
+
+    @switch (step()) {
+      <!-- ======================= Datos para la factura ======================= -->
+      @case ('customer') {
+        <section class="flex flex-col gap-4 rounded-lg border border-border bg-surface p-4">
+          <h2 class="font-semibold text-foreground">Datos para la factura</h2>
+          <label class="flex flex-col gap-1 text-sm">
+            <span class="font-medium text-foreground">Nombre o razón social</span>
+            <input
+              class="rounded-md border bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-accent"
+              [class.border-danger]="fieldError('customerName')"
+              [class.border-border]="!fieldError('customerName')"
+              autocomplete="off"
+              autocapitalize="words"
+              appAllowed="name"
+              [maxlength]="rules.customerName.max"
+              [ngModel]="draft().customerName"
+              (ngModelChange)="updateDraft({ customerName: $event })"
+              (blur)="touch('customerName')"
+            />
+            @if (fieldError('customerName'); as error) {
+              <span class="text-xs text-danger">{{ error }}</span>
+            }
+          </label>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label class="flex flex-col gap-1 text-sm">
+              <span class="font-medium text-foreground">CI / NIT</span>
+              <input class="rounded-md border bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-accent"
+                [class.border-danger]="fieldError('taxId')" [class.border-border]="!fieldError('taxId')"
+                inputmode="numeric" autocomplete="off" appAllowed="digits" [maxlength]="rules.taxId.max"
+                [ngModel]="draft().taxId" (ngModelChange)="updateDraft({ taxId: $event })" (blur)="touch('taxId')" />
+              @if (fieldError('taxId'); as error) {
+                <span class="text-xs text-danger">{{ error }}</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm">
+              <span class="font-medium text-foreground">Celular</span>
+              <input class="rounded-md border bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-accent"
+                [class.border-danger]="fieldError('phone')" [class.border-border]="!fieldError('phone')"
+                type="tel" inputmode="numeric" autocomplete="off" placeholder="7xxxxxxx" appAllowed="digits" [maxlength]="rules.phone.length"
+                [ngModel]="draft().phone" (ngModelChange)="updateDraft({ phone: $event })" (blur)="touch('phone')" />
+              @if (fieldError('phone'); as error) {
+                <span class="text-xs text-danger">{{ error }}</span>
+              }
+            </label>
+          </div>
+          <div class="flex flex-col gap-2 text-sm">
+            <span class="font-medium text-foreground">Unidad Educativa</span>
+            <div class="flex flex-wrap gap-2">
+              @for (school of form()!.schools; track school.schoolId) {
+                <button type="button" class="rounded-full border px-4 py-2"
+                  [class]="draft().schoolId === school.schoolId ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-background text-foreground'"
+                  (click)="updateDraft({ schoolId: draft().schoolId === school.schoolId ? null : school.schoolId })">
+                  {{ school.name }}
+                </button>
+              }
+              @if (form()!.schools.length === 0) {
+                <span class="text-muted-foreground">No hay colegios cargados.</span>
+              }
+            </div>
+          </div>
+          <label class="flex flex-col gap-1 text-sm">
+            <span class="font-medium text-foreground">Observaciones</span>
+            <textarea rows="2" class="rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-accent"
+              appAllowed="text" [maxlength]="rules.notes.max"
+              [ngModel]="draft().notes" (ngModelChange)="updateDraft({ notes: $event })"></textarea>
+            <span class="self-end text-[11px] text-muted-foreground">{{ draft().notes.length }}/{{ rules.notes.max }}</span>
+          </label>
+        </section>
+      }
+
+      <!-- ======================= Textos por hijo ======================= -->
+      @case ('texts') {
+        @for (student of draft().students; track student.key) {
+          @let course = this.course(student.courseId);
+          <section class="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="font-semibold text-foreground">{{ student.label }}</h2>
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-semibold text-accent">Bs {{ money(studentTotal(student)) }}</span>
+                @if (draft().students.length > 1) {
+                  <button type="button" class="text-danger" aria-label="Quitar hijo" (click)="removeStudent(student.key)"><app-icon name="trash-bin-trash" size="size-4" /></button>
+                }
+              </div>
+            </div>
+
+            <!-- Curso -->
+            <app-select
+              label="Curso"
+              placeholder="Elija el curso"
+              [options]="courseOptions()"
+              [ngModel]="student.courseId ? '' + student.courseId : null"
+              (ngModelChange)="$event && setCourse(student, +$event)"
+            />
+
+            @if (course) {
+              <div class="flex items-center justify-between text-xs text-muted-foreground">
+                <span>{{ student.selected.length }} de {{ course.items.length }} marcados</span>
+                <span class="flex gap-3">
+                  <button type="button" class="underline" (click)="setAllTexts(student, true)">Todos</button>
+                  <button type="button" class="underline" (click)="setAllTexts(student, false)">Ninguno</button>
+                </span>
+              </div>
+              <ul class="flex flex-col divide-y divide-border rounded-md border border-border">
+                @for (item of course.items; track item.productId) {
+                  @let on = student.selected.includes(item.productId);
+                  <li>
+                    <button type="button" class="flex w-full items-center gap-3 px-3 py-2.5 text-left" (click)="toggleText(student, item.productId)">
+                      <span class="flex size-5 shrink-0 items-center justify-center rounded border-2"
+                        [class]="on ? 'border-primary bg-primary text-primary-foreground' : 'border-border'">
+                        @if (on) {
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="size-3.5"><path d="M5 13l4 4L19 7" /></svg>
+                        }
+                      </span>
+                      <span class="min-w-0 flex-1">
+                        <span class="block text-sm" [class.text-foreground]="on" [class.text-muted-foreground]="!on" [class.line-through]="!on">{{ item.name }}</span>
+                        @if (!item.isDefaultSelected) {
+                          <span class="text-xs text-muted-foreground">Opcional</span>
+                        }
+                        @if (item.stock <= 0) {
+                          <span class="ml-1 text-xs text-warning">Sin stock en almacén</span>
+                        }
+                      </span>
+                      <span class="shrink-0 text-sm" [class.text-muted-foreground]="item.price <= 0">
+                        {{ item.price > 0 ? 'Bs ' + money(item.price) : 'Sin precio' }}
+                      </span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="rounded-md bg-background p-3 text-sm text-muted-foreground">Elija el curso para ver su lista de textos.</p>
+            }
+
+            <!-- Agregados aparte -->
+            @if (student.extras.length || student.manual.length) {
+              <ul class="flex flex-col gap-1">
+                @for (id of student.extras; track id) {
+                  <li class="flex items-center gap-2 rounded-md bg-background px-3 py-2 text-sm">
+                    <span class="flex-1 text-foreground">{{ product(id)?.name }}</span>
+                    <span>Bs {{ money(product(id)?.price ?? 0) }}</span>
+                    <button type="button" class="text-danger" aria-label="Quitar" (click)="removeExtra(student, id)"><app-icon name="trash-bin-trash" size="size-4" /></button>
+                  </li>
+                }
+                @for (m of student.manual; track m.key) {
+                  <li class="flex items-center gap-2 rounded-md bg-background px-3 py-2 text-sm">
+                    <span class="flex-1 text-foreground">{{ m.description }} <span class="text-xs text-muted-foreground italic">(a mano)</span></span>
+                    <span>Bs {{ money(m.price) }}</span>
+                    <button type="button" class="text-danger" aria-label="Quitar" (click)="removeManual(student, m.key)"><app-icon name="trash-bin-trash" size="size-4" /></button>
+                  </li>
+                }
+              </ul>
+            }
+
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm text-foreground" (click)="openExtraSearch(student)">
+                <app-icon name="document-add" size="size-4" /> Buscar otro texto
+              </button>
+              <button type="button" class="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm text-foreground" (click)="openManual(student)">
+                <app-icon name="pencil" size="size-4" /> Escribir a mano
+              </button>
+            </div>
+
+            @if (extraSearchFor() === student.key) {
+              <div class="flex flex-col gap-2 rounded-md border border-border bg-background p-3">
+                <input class="rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-accent"
+                  placeholder="Nombre o código del texto…" appAllowed="text" [maxlength]="rules.search.max"
+                  [ngModel]="extraSearch()" (ngModelChange)="extraSearch.set($event)" />
+                @for (p of extraResults(); track p.productId) {
+                  <button type="button" class="flex items-center gap-2 rounded px-2 py-2 text-left text-sm hover:bg-surface" (click)="addExtra(student, p.productId)">
+                    <span class="flex-1 text-foreground">{{ p.name }}</span>
+                    <span class="text-muted-foreground">{{ p.price > 0 ? 'Bs ' + money(p.price) : 'Sin precio' }}</span>
+                  </button>
+                } @empty {
+                  <p class="text-xs text-muted-foreground">
+                    {{ extraSearch().trim().length < 2 ? 'Escriba al menos 2 letras.' : 'No está en el catálogo: use “Escribir a mano”.' }}
+                  </p>
+                }
+              </div>
+            }
+
+            @if (manualFor() === student.key) {
+              <div class="flex flex-col gap-2 rounded-md border border-border bg-background p-3">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-end">
+                  <label class="flex flex-1 flex-col gap-1 text-sm">
+                    <span class="text-muted-foreground">Nombre del texto</span>
+                    <input class="rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground"
+                      appAllowed="name" [maxlength]="rules.manualText.max" autocapitalize="sentences"
+                      [(ngModel)]="manualName" (ngModelChange)="manualError.set(null)" />
+                  </label>
+                  <label class="flex flex-col gap-1 text-sm sm:w-32">
+                    <span class="text-muted-foreground">Precio (Bs)</span>
+                    <input class="rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground"
+                      type="number" inputmode="decimal" min="0" [max]="rules.price.max" step="0.5"
+                      [(ngModel)]="manualPrice" (ngModelChange)="manualError.set(null)" />
+                  </label>
+                  <button type="button" class="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground" (click)="addManual(student)">Agregar</button>
+                </div>
+                @if (manualError(); as error) {
+                  <span class="text-xs text-danger">{{ error }}</span>
+                }
+              </div>
+            }
+          </section>
+        }
+        <button type="button" class="flex items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border py-3 text-sm font-medium text-foreground" (click)="addStudent()">
+          <app-icon name="add-square" size="size-4" /> Agregar otro hijo
+        </button>
+      }
+
+      <!-- ======================= Uniformes ======================= -->
+      @case ('uniforms') {
+        <input class="rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-accent"
+          placeholder="Buscar prenda…" appAllowed="text" [maxlength]="rules.search.max" [ngModel]="searchUniform()" (ngModelChange)="searchUniform.set($event)" />
+        @for (group of garmentGroups(); track group.label) {
+          <h2 class="mt-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase">{{ group.label }}</h2>
+          <div class="flex flex-col gap-2">
+            @for (garment of group.garments; track garment.garmentName) {
+              @let key = group.label + garment.garmentName;
+              <div class="rounded-lg border border-border bg-surface">
+                <button type="button" class="flex w-full items-center gap-3 px-4 py-3 text-left" (click)="openGarment.set(openGarment() === key ? null : key)">
+                  <span class="flex-1">
+                    <span class="block font-medium text-foreground">{{ garment.garmentName }}</span>
+                    <span class="text-xs text-muted-foreground">{{ garmentPriceRange(garment) }}</span>
+                  </span>
+                  @if (garmentQty(garment) > 0) {
+                    <span class="rounded-full bg-primary px-2 text-xs leading-5 text-primary-foreground">{{ garmentQty(garment) }}</span>
+                  }
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4 text-muted-foreground transition-transform" [class.rotate-180]="openGarment() === key"><path d="M6 9l6 6 6-6" /></svg>
+                </button>
+                @if (openGarment() === key) {
+                  <div class="flex flex-col gap-3 border-t border-border px-4 py-3">
+                    <p class="text-xs text-muted-foreground">Toque la talla para agregarla.</p>
+                    <div class="flex flex-wrap gap-2">
+                      @for (size of garment.sizes; track size.productId) {
+                        <button type="button" class="relative flex min-w-14 flex-col items-center rounded-md border px-3 py-2"
+                          [class]="qty(size.productId) > 0 ? 'border-primary bg-primary/10' : 'border-border bg-background'"
+                          (click)="changeQty(size.productId, 1)">
+                          <span class="font-semibold text-foreground">{{ size.size }}</span>
+                          <span class="text-[11px] text-muted-foreground">{{ size.price > 0 ? money(size.price) : 's/p' }}</span>
+                          @if (size.stock <= 0) {
+                            <span class="text-[10px] text-warning">sin stock</span>
+                          }
+                          @if (qty(size.productId) > 0) {
+                            <span class="absolute -top-2 -right-2 min-w-5 rounded-full bg-primary px-1 text-xs leading-5 text-primary-foreground">{{ qty(size.productId) }}</span>
+                          }
+                        </button>
+                      }
+                    </div>
+                    @for (size of garment.sizes; track size.productId) {
+                      @if (qty(size.productId) > 0) {
+                        <div class="flex items-center gap-3 text-sm">
+                          <span class="flex-1 text-foreground">Talla {{ size.size }}</span>
+                          <ng-container *ngTemplateOutlet="stepper; context: { id: size.productId }" />
+                        </div>
+                      }
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        } @empty {
+          <p class="text-sm text-muted-foreground">No se encontró la prenda.</p>
+        }
+      }
+
+      <!-- ======================= Cuadernos / Otros ======================= -->
+      @case ('notebooks') {
+        <ng-container *ngTemplateOutlet="productList; context: { items: notebooks(), search: searchNotebook, placeholder: 'Buscar cuaderno…' }" />
+      }
+      @case ('others') {
+        <ng-container *ngTemplateOutlet="productList; context: { items: others(), search: searchOther, placeholder: 'Buscar material, calculadora, mochila…' }" />
+      }
+
+      <!-- ======================= Resumen ======================= -->
+      @case ('summary') {
+        <section class="flex flex-col gap-1 rounded-lg border border-border bg-surface p-4">
+          <p class="text-xs font-semibold text-muted-foreground uppercase">Factura a nombre de</p>
+          <p class="font-semibold text-foreground">{{ draft().customerName || '— falta el nombre —' }}</p>
+          <p class="text-sm text-muted-foreground">CI/NIT: {{ draft().taxId || '—' }} · Cel: {{ draft().phone || '—' }}</p>
+          <button type="button" class="self-start text-sm text-accent underline" (click)="goTo('customer')">Editar datos</button>
+        </section>
+
+        @for (group of summaryGroups(); track group.name) {
+          <section class="rounded-lg border border-border bg-surface">
+            <div class="flex items-center justify-between border-b border-border px-4 py-2">
+              <h3 class="text-sm font-semibold text-foreground">{{ group.name }}</h3>
+              <span class="text-sm font-semibold text-accent">Bs {{ money(group.subtotal) }}</span>
+            </div>
+            <ul class="divide-y divide-border">
+              @for (line of group.lines; track line.key) {
+                <li class="flex items-center gap-3 px-4 py-2 text-sm">
+                  <span class="min-w-0 flex-1">
+                    <span class="block text-foreground">{{ line.name }}</span>
+                    @if (line.manual) {
+                      <span class="text-xs text-muted-foreground italic">escrito a mano</span>
+                    }
+                  </span>
+                  @if (line.cartProductId) {
+                    <ng-container *ngTemplateOutlet="stepper; context: { id: line.cartProductId }" />
+                  } @else {
+                    <span class="text-muted-foreground">{{ line.quantity }} ×</span>
+                  }
+                  <span class="w-20 shrink-0 text-right" [class.text-muted-foreground]="line.price <= 0">
+                    {{ line.price > 0 ? money(line.price * line.quantity) : 's/p' }}
+                  </span>
+                </li>
+              }
+            </ul>
+          </section>
+        } @empty {
+          <p class="rounded-lg bg-surface p-4 text-center text-sm text-muted-foreground">Todavía no hay nada en el pedido.</p>
+        }
+
+        @if (withoutPrice() > 0) {
+          <p class="rounded-md bg-warning/10 p-3 text-sm text-warning">
+            {{ withoutPrice() }} producto(s) todavía no tienen precio cargado; el total no los incluye.
+          </p>
+        }
+      }
+    }
+  </div>
+
+  <!-- ======================= Barra del total ======================= -->
+  <div class="fixed inset-x-0 bottom-[var(--bottom-nav-h)] z-20 border-t border-border bg-surface/95 px-3 py-3 shadow-[0_-4px_16px_rgb(0_0_0/0.08)] backdrop-blur md:left-auto md:w-[calc(100%-16rem)]">
+    <div class="mx-auto flex max-w-3xl items-center gap-3">
+      <div class="min-w-0 flex-1">
+        <p class="text-xs text-muted-foreground">{{ itemCount() }} artículos</p>
+        <p class="text-2xl leading-tight font-bold text-foreground">Bs {{ money(total()) }}</p>
+      </div>
+      @if (stepIndex() > 0) {
+        <button type="button" class="flex size-12 shrink-0 items-center justify-center rounded-full border border-border text-foreground transition-transform active:scale-90" aria-label="Paso anterior" (click)="back()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M15 18l-6-6 6-6" /></svg>
+        </button>
+      }
+      @if (step() === 'summary') {
+        <button type="button" class="flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground disabled:opacity-50"
+          [disabled]="saving() || itemCount() === 0" (click)="finish()">
+          <app-icon name="cart-check" />
+          {{ saving() ? 'Enviando…' : 'Finalizar pedido' }}
+        </button>
+      } @else {
+        <button type="button" class="flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground transition-transform active:scale-95" (click)="next()">
+          Siguiente
+        </button>
+      }
+    </div>
+  </div>
+}
+
+<!-- Lista con buscador y cantidad (cuadernos, otros) -->
+<ng-template #productList let-items="items" let-search="search" let-placeholder="placeholder">
+  <input class="rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-accent"
+    [placeholder]="placeholder" appAllowed="text" [maxlength]="rules.search.max" [ngModel]="search()" (ngModelChange)="search.set($event)" />
+  <ul class="flex flex-col divide-y divide-border rounded-lg border border-border bg-surface">
+    @for (p of items; track p.productId) {
+      <li class="flex items-center gap-3 px-3 py-2.5">
+        <span class="min-w-0 flex-1">
+          <span class="block text-sm text-foreground">{{ p.name }}</span>
+          <span class="text-xs text-muted-foreground">
+            {{ p.price > 0 ? 'Bs ' + money(p.price) : 'Sin precio' }}
+            @if (p.stock <= 0) { · <span class="text-warning">sin stock</span> }
+          </span>
+        </span>
+        @if (qty(p.productId) > 0) {
+          <ng-container *ngTemplateOutlet="stepper; context: { id: p.productId }" />
+        } @else {
+          <button type="button" class="flex items-center gap-1 rounded-full border border-primary px-3 py-1.5 text-sm font-medium text-accent" (click)="changeQty(p.productId, 1)"><app-icon name="cart-plus" size="size-4" /> Agregar</button>
+        }
+      </li>
+    } @empty {
+      <li class="px-3 py-4 text-center text-sm text-muted-foreground">Sin resultados.</li>
+    }
+  </ul>
+</ng-template>
+
+<!-- − cantidad + -->
+<ng-template #stepper let-id="id">
+  <span class="flex shrink-0 items-center rounded-full border border-border">
+    <button type="button" class="flex size-8 items-center justify-center text-lg text-foreground" aria-label="Quitar uno" (click)="changeQty(id, -1)">−</button>
+    <span class="w-6 text-center text-sm font-semibold text-foreground">{{ qty(id) }}</span>
+    <button type="button" class="flex size-8 items-center justify-center text-lg text-foreground" aria-label="Agregar uno" (click)="changeQty(id, 1)">+</button>
+  </span>
+</ng-template>

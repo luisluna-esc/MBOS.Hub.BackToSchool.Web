@@ -1,0 +1,95 @@
+<app-dialog
+  [title]="order() ? 'Ficha N° ' + order()!.ticketNumber : 'Pedido'"
+  saveLabel="Cerrar"
+  [saveDisabled]="false"
+  [showCancel]="false"
+  (save)="close()"
+  (cancel)="close()"
+>
+  @if (order(); as o) {
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold" [class]="statusClasses[o.status]">{{ statusLabels[o.status] }}</span>
+        <span class="text-xs text-muted-foreground">{{ o.createdAt | date: 'dd/MM/yyyy HH:mm' }} · {{ o.promoterName }}</span>
+      </div>
+
+      <div class="rounded-md border border-border bg-surface p-3 text-sm">
+        <p class="font-semibold text-foreground">{{ o.customerName }}</p>
+        <p class="text-muted-foreground">CI/NIT: {{ o.taxId || '—' }} · Cel: {{ o.phone || '—' }}</p>
+        @if (o.schoolName) {
+          <p class="text-muted-foreground">Colegio: {{ o.schoolName }}</p>
+        }
+        @if (o.notes) {
+          <p class="mt-1 text-foreground">Obs.: {{ o.notes }}</p>
+        }
+        @if (o.cancelReason) {
+          <p class="mt-1 text-danger">Anulado: {{ o.cancelReason }}</p>
+        }
+      </div>
+
+      @for (group of groups(); track group.title) {
+        <div class="rounded-md border border-border bg-surface">
+          <p class="border-b border-border px-3 py-1.5 text-sm font-semibold text-foreground">{{ group.title }}</p>
+          <ul class="divide-y divide-border text-sm">
+            @for (line of group.lines; track line.saleOrderLineId) {
+              <li class="flex items-center gap-3 px-3 py-1.5">
+                <span class="w-6 text-center font-semibold text-foreground">{{ line.quantity }}</span>
+                <span class="min-w-0 flex-1 text-foreground">
+                  {{ line.description }}
+                  @if (line.size) { <span class="font-semibold">· {{ line.size }}</span> }
+                  @if (line.isManual) { <span class="text-xs text-muted-foreground italic">(a mano)</span> }
+                  @if (line.code) { <span class="block text-xs text-muted-foreground">{{ line.code }}</span> }
+                </span>
+                <span class="shrink-0 text-right">{{ money(line.subtotal) }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+
+      <div class="flex items-center justify-between rounded-md bg-primary px-4 py-3 text-primary-foreground">
+        <span>{{ o.itemCount }} artículos</span>
+        <span class="text-xl font-bold">Bs {{ money(o.total) }}</span>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        @if (warehouse && o.status !== 'CANCELLED') {
+          <button type="button" class="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground" (click)="print()">
+            <app-icon name="printer" size="size-4" /> Imprimir hoja
+          </button>
+          @if (o.status !== 'READY') {
+            <button type="button" class="flex items-center gap-1.5 rounded-full bg-success px-4 py-2 text-sm font-medium text-white disabled:opacity-50" [disabled]="busy()" (click)="setStatus('READY')">
+              <app-icon name="check-circle" size="size-4" /> Listo en caja
+            </button>
+          } @else {
+            <button type="button" class="flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm text-foreground disabled:opacity-50" [disabled]="busy()" (click)="setStatus('PRINTED')">
+              <app-icon name="archive-up" size="size-4" /> Volver a almacén
+            </button>
+          }
+        }
+        @if (canCancel() && !cancelling()) {
+          <button type="button" class="flex items-center gap-1.5 rounded-full border border-danger px-4 py-2 text-sm text-danger" (click)="cancelling.set(true)">
+            <app-icon name="forbidden-circle" size="size-4" /> Anular pedido
+          </button>
+        }
+      </div>
+
+      @if (cancelling()) {
+        <div class="flex flex-col gap-2 rounded-md border border-danger/40 bg-danger/5 p-3">
+          <label class="flex flex-col gap-1 text-sm">
+            <span class="text-foreground">Motivo de la anulación</span>
+            <input class="rounded-md border border-border bg-surface px-3 py-2 text-foreground" appAllowed="text" maxlength="250" [(ngModel)]="cancelReason" />
+          </label>
+          <div class="flex gap-2">
+            <button type="button" class="rounded-full bg-danger px-4 py-2 text-sm font-medium text-white disabled:opacity-50" [disabled]="busy()" (click)="setStatus('CANCELLED')">
+              Confirmar anulación
+            </button>
+            <button type="button" class="rounded-full border border-border px-4 py-2 text-sm text-foreground" (click)="cancelling.set(false)">No</button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="h-40 animate-pulse rounded-md bg-surface"></div>
+  }
+</app-dialog>

@@ -1,0 +1,501 @@
+{
+  "shortcuts": {
+    "keySpace": "Espacio",
+    "filterEnter": "En los filtros: buscar al instante",
+    "switchToggle": "Interruptor (Sí / No): cambiarlo",
+    "dateOpen": "Fecha: abrir el calendario (se recorre con flechas)",
+    "dateMonth": "Calendario abierto: mes anterior o siguiente",
+    "dateDay": "Fecha: un día más o menos",
+    "dateToday": "Fecha: hoy",
+    "dateType": "Fecha: escribirla (13102026, 13/10/26 o 13/10)",
+    "selectPick": "Lista abierta: elegir (con Tab, además pasa al siguiente campo)",
+    "selectMove": "Lista abierta: moverse entre opciones",
+    "selectType": "Lista de opciones: escribir las primeras letras para elegir",
+    "selectOpen": "Lista de opciones: abrirla",
+    "prevField": "Volver al campo anterior",
+    "nextField": "Pasar al siguiente campo",
+    "groupFields": "Campos y filtros",
+    "or": "o",
+    "title": "Atajos de teclado",
+    "onMac": "Teclas de Mac",
+    "onWindows": "Teclas de Windows",
+    "then": "y luego",
+    "footer": "Los atajos de letras no funcionan mientras escribes en un campo; Guardar, Esc y los de Ctrl/⌘ sí.",
+    "groupGeneral": "General",
+    "groupForms": "Formularios",
+    "groupLists": "Listas",
+    "groupGoTo": "Ir a",
+    "palette": "Buscar una pantalla e ir a ella",
+    "help": "Ver esta lista de atajos",
+    "sidebar": "Mostrar u ocultar el menú lateral",
+    "cancel": "Cerrar la ventana abierta",
+    "save": "Guardar (o Continuar, en el encabezado)",
+    "new": "Nuevo registro (producto, salida, transferencia...)",
+    "addLine": "Agregar un producto",
+    "enterPrice": "En el precio: agregar otra línea",
+    "productArrows": "En el producto: elegir de la lista",
+    "productTab": "En el producto: confirmar y pasar al siguiente campo",
+    "search": "Ir al buscador de la lista",
+    "nextPage": "Página siguiente",
+    "prevPage": "Página anterior",
+    "goHome": "Inicio",
+    "goProducts": "Ir a Productos y precios",
+    "paletteSearch": "Escribe el nombre de una pantalla...",
+    "paletteEmpty": "No hay pantallas con ese nombre.",
+    "paletteHint": "↑ ↓ para elegir, Enter para abrir, Esc para cerrar",
+    "goNewOrder": "Ir a Nuevo pedido",
+    "goOrders": "Ir a Pedidos del día",
+    "goWarehouse": "Ir a Almacén"
+  },
+  "language": {
+    "select": "Idioma",
+    "es": "Español",
+    "en": "Inglés",
+    "pt": "Portugués"
+  },
+  "shell": {
+    "collapseMenu": "Contraer menú",
+    "expandMenu": "Expandir menú",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
+  },
+  "nav": {
+    "home": "Inicio",
+    "newOrder": "Nuevo pedido",
+    "orders": "Pedidos del día",
+    "warehouse": "Almacén",
+    "catalog": "Catálogo",
+    "products": "Productos y precios",
+    "courses": "Listas por curso",
+    "schools": "Colegios",
+    "admin": "Administración",
+    "users": "Usuarios",
+    "roles": "Roles",
+    "permissions": "Permisos"
+  },
+  "roles": {
+    "title": "Roles",
+    "new": "Nuevo rol",
+    "filters": {
+      "search": "Buscar por nombre",
+      "status": "Estado",
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "columns": {
+      "name": "Nombre",
+      "description": "Descripción",
+      "status": "Estado"
+    },
+    "actions": {
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "permissions": "Permisos",
+      "menus": "Menús"
+    },
+    "form": {
+      "newTitle": "Nuevo rol",
+      "editTitle": "Editar rol",
+      "name": "Nombre",
+      "description": "Descripción",
+      "isActive": "Activo",
+      "success": "Rol guardado correctamente.",
+      "error": "No se pudo guardar el rol."
+    },
+    "delete": {
+      "title": "Eliminar rol",
+      "message": "¿Seguro que deseas eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+      "success": "Rol eliminado correctamente.",
+      "error": "No se pudo eliminar el rol."
+    },
+    "permissions": {
+      "title": "Permisos",
+      "loading": "Cargando...",
+      "empty": "No hay permisos disponibles.",
+      "error": "No se pudo actualizar el permiso.",
+      "locked": "El rol M-BOS siempre mantiene acceso completo; sus permisos no se pueden modificar."
+    },
+    "menus": {
+      "title": "Menús visibles",
+      "general": "General",
+      "loading": "Cargando...",
+      "empty": "No hay módulos de menú disponibles.",
+      "error": "No se pudo actualizar el menú.",
+      "hint": "Marca aquí los módulos que este rol puede ver. Un módulo sin ningún rol marcado no lo ve nadie."
+    }
+  },
+  "permissions": {
+    "title": "Permisos",
+    "new": "Nuevo permiso",
+    "filters": {
+      "search": "Buscar por nombre",
+      "module": "Módulo",
+      "status": "Estado",
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "columns": {
+      "code": "Código",
+      "name": "Nombre",
+      "module": "Módulo",
+      "description": "Descripción",
+      "status": "Estado"
+    },
+    "actions": {
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "form": {
+      "newTitle": "Nuevo permiso",
+      "editTitle": "Editar permiso",
+      "code": "Código",
+      "name": "Nombre",
+      "module": "Módulo",
+      "description": "Descripción",
+      "isActive": "Activo",
+      "success": "Permiso guardado correctamente.",
+      "error": "No se pudo guardar el permiso."
+    },
+    "delete": {
+      "title": "Eliminar permiso",
+      "message": "¿Seguro que deseas eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+      "success": "Permiso eliminado correctamente.",
+      "error": "No se pudo eliminar el permiso."
+    }
+  },
+  "users": {
+    "title": "Usuarios",
+    "new": "Nuevo usuario",
+    "filters": {
+      "search": "Buscar por nombre, usuario o correo",
+      "status": "Estado",
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "columns": {
+      "name": "Nombre",
+      "username": "Usuario",
+      "email": "Correo",
+      "status": "Estado"
+    },
+    "actions": {
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "roles": "Roles"
+    },
+    "form": {
+      "newTitle": "Nuevo usuario",
+      "editTitle": "Editar usuario",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "email": "Correo",
+      "emailInvalid": "El correo debe incluir un \"@\".",
+      "username": "Usuario",
+      "password": "Contraseña",
+      "passwordHint": "Deja en blanco para mantener la contraseña actual.",
+      "confirmPassword": "Confirmar contraseña",
+      "passwordMismatch": "Las contraseñas no coinciden.",
+      "isActive": "Activo",
+      "success": "Usuario guardado correctamente.",
+      "error": "No se pudo guardar el usuario."
+    },
+    "delete": {
+      "title": "Eliminar usuario",
+      "message": "¿Seguro que deseas eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+      "success": "Usuario eliminado correctamente.",
+      "error": "No se pudo eliminar el usuario."
+    },
+    "roles": {
+      "title": "Roles",
+      "loading": "Cargando...",
+      "empty": "No hay roles disponibles.",
+      "error": "No se pudo actualizar el rol."
+    }
+  },
+  "common": {
+    "logout": "Cerrar sesión",
+    "loading": "Cargando..."
+  },
+  "home": {
+    "greeting": "Hola, {{username}}",
+    "placeholder": "Este es el punto de partida del panel. Pronto vas a poder navegar aquí a inventario, finanzas y más.",
+    "dashboard": {
+      "issuesThisMonth": "Salidas del mes",
+      "receiptsThisMonth": "Entradas del mes",
+      "pendingReceivable": "Pendiente por cobrar",
+      "paymentsThisMonth": "Cobranzas del mes",
+      "issuesChartTitle": "Salidas de los últimos seis meses",
+      "receivableChartTitle": "Cuentas por Cobrar: pendiente vs pagado",
+      "departmentChartTitle": "Salidas del mes por departamento",
+      "departmentChartEmpty": "No hay salidas este mes."
+    },
+    "yourRole": "Tu rol: {{role}}",
+    "whatYouDo": "De qué te encargas",
+    "roles": {
+      "mbos": {
+        "summary": "Administras el sistema completo: usuarios, roles y los menús que ve cada uno. Tienes a la vista todo el movimiento del almacén y de las cuentas.",
+        "tasks": [
+          "Crear usuarios y asignarles su rol",
+          "Definir qué menús ve cada rol",
+          "Revisar el resumen financiero y todos los reportes"
+        ]
+      },
+      "tesorero": {
+        "summary": "Cuidas el dinero y autorizas los cambios. Revisas cómo va el almacén y las cuentas, y apruebas o rechazas las ediciones y anulaciones que piden los demás.",
+        "tasks": [
+          "Aprobar o rechazar ediciones y anulaciones de entradas y salidas",
+          "Seguir las cuentas por cobrar y las cobranzas del mes",
+          "Consultar los reportes de inventario y finanzas"
+        ]
+      },
+      "contador": {
+        "summary": "Llevas el registro contable del almacén: lo que entra, lo que sale y cuánto vale. También autorizas las ediciones y anulaciones que pide el Auxiliar Contador.",
+        "tasks": [
+          "Registrar entradas y salidas de material",
+          "Autorizar ediciones y anulaciones",
+          "Revisar el kardex, el stock y los reportes"
+        ]
+      },
+      "auxiliar": {
+        "summary": "Registras el día a día del almacén: las compras y entradas, las salidas a pastores y los traspasos entre almacenes. Mantienes al día clientes, proveedores y productos.",
+        "tasks": [
+          "Registrar entradas, salidas y transferencias",
+          "Cargar y corregir clientes, proveedores y productos",
+          "Pedir al Contador o al Tesorero que edite o anule un registro"
+        ]
+      },
+      "pastor": {
+        "summary": "Consultas tu propia cuenta: el material que se te entregó y lo que tienes pendiente de pago.",
+        "tasks": [
+          "Ver el material que recibiste",
+          "Revisar tu saldo pendiente"
+        ]
+      },
+      "caja": {
+        "summary": "Recibes los pagos de las cuentas por cobrar y registras cada depósito, producto por producto.",
+        "tasks": [
+          "Registrar los depósitos de las cuentas por cobrar",
+          "Ver qué cuentas siguen pendientes"
+        ]
+      }
+    },
+    "yourRoleLabel": "Tu rol"
+  },
+  "dialog": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "confirm": "Confirmar"
+  },
+  "table": {
+    "moreActions": "Más opciones",
+    "empty": "No hay datos para mostrar.",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "pageInfo": "Página {{page}} de {{total}}",
+    "pageSize": "Por página:",
+    "actions": "Opciones"
+  },
+  "filters": {
+    "clear": "Limpiar"
+  },
+  "errorState": {
+    "400": {
+      "title": "Solicitud inválida",
+      "description": "La solicitud no pudo ser procesada. Verifica los datos e inténtalo de nuevo."
+    },
+    "401": {
+      "title": "No autorizado",
+      "description": "Debes iniciar sesión para acceder a este contenido."
+    },
+    "403": {
+      "title": "Acceso denegado",
+      "description": "No tienes permisos para ver esta sección."
+    },
+    "404": {
+      "title": "Página no encontrada",
+      "description": "El contenido que buscas no existe o fue movido."
+    },
+    "500": {
+      "title": "Error del servidor",
+      "description": "Ocurrió un problema inesperado. Inténtalo más tarde."
+    },
+    "503": {
+      "title": "Servicio no disponible",
+      "description": "El servicio no está disponible en este momento. Inténtalo más tarde."
+    },
+    "default": {
+      "title": "Ocurrió un error",
+      "description": "Algo salió mal. Inténtalo de nuevo."
+    }
+  },
+  "login": {
+    "title": "Iniciar sesión",
+    "welcomeTitle": "Vuelta a clases",
+    "welcomeDescription": "Pedidos de textos, uniformes y materiales escolares: del promotor al almacén y a caja, sin hojitas.",
+    "usernameOrEmail": "Usuario o correo",
+    "password": "Contraseña",
+    "submit": "Entrar",
+    "error": "No se pudo iniciar sesión."
+  },
+  "profile": {
+    "title": "Mi perfil",
+    "fullName": "Nombre",
+    "username": "Usuario",
+    "email": "Correo",
+    "roles": "Roles"
+  },
+  "inbox": {
+    "toast": {
+      "unread": "Tienes {{count}} respuesta(s) sin leer en tu Buzón",
+      "new": "Llegaron {{count}} respuesta(s) nuevas a tu Buzón",
+      "hint": "Revísalas en Buzón, pestaña Respuestas.",
+      "copy": "Copiar N°",
+      "copied": "Copiado",
+      "copyHint": "Copia el N° y búscalo en el Historial o en el Buzón."
+    },
+    "alreadySeen": "Ya la viste",
+    "newMark": "Nueva",
+    "emptyTabs": {
+      "signed": "Todavía no firmaste ni autorizaste nada.",
+      "answers": "Todavía no hay respuestas a tus solicitudes.",
+      "pending": "No tienes nada pendiente.",
+      "unread": "No tienes respuestas nuevas.",
+      "seen": "Todavía no hay respuestas vistas."
+    },
+    "actions": {
+      "open": "Abrir",
+      "markSeen": "Marcar como visto",
+      "markAllSeen": "Marcar todo como visto",
+      "reviewQueue": "Revisar uno por uno"
+    },
+    "columns": {
+      "kind": "Tipo",
+      "document": "Documento",
+      "detail": "Detalle",
+      "date": "Fecha",
+      "result": "Resultado"
+    },
+    "documentTypes": {
+      "receipt": "Entrada",
+      "issue": "Salida",
+      "transfer": "Transferencia"
+    },
+    "filters": {
+      "search": "N° o detalle",
+      "kind": "Tipo",
+      "document": "Documento",
+      "dateFrom": "Desde",
+      "dateTo": "Hasta"
+    },
+    "tabHints": {
+      "signed": "Lo que verificaste, aprobaste o rechazaste",
+      "answers": "Cómo terminó lo que pediste o digitaste",
+      "pending": "Por firmar o autorizar",
+      "unread": "Respuestas nuevas a tus solicitudes",
+      "seen": "Respuestas que ya revisaste"
+    },
+    "tabs": {
+      "signed": "Lo que firmé",
+      "answers": "Respuestas",
+      "pending": "Pendientes",
+      "unread": "Sin leer",
+      "seen": "Vistos"
+    },
+    "title": "Buzón",
+    "description": "Lo que tienes por firmar o autorizar, y las respuestas a tus solicitudes.",
+    "loading": "Cargando...",
+    "allDone": "No tienes nada pendiente.",
+    "empty": "Nada por aquí.",
+    "more": "Y {{count}} más.",
+    "sections": {
+      "toVerify": "Por verificar y firmar",
+      "toApprove": "Por aprobar y firmar",
+      "voidRequests": "Anulaciones por autorizar",
+      "receiptEdits": "Correcciones por autorizar",
+      "myResults": "Mis solicitudes (últimos 15 días)"
+    },
+    "kinds": {
+      "issueEdit": "Corrección de salida",
+      "reviewSigned": "Firma",
+      "reviewApproved": "Documento aprobado",
+      "toVerify": "Digitado, falta verificar",
+      "toApprove": "Verificado, falta aprobar",
+      "voidRequest": "Anulación",
+      "receiptEdit": "Corrección de entrada",
+      "reviewRejected": "Documento rechazado"
+    },
+    "results": {
+      "reabierto": "Reabriste",
+      "rechazado": "Rechazaste",
+      "aprobado": "Aprobaste",
+      "verificado": "Verificaste",
+      "approved": "Aprobada",
+      "rejected": "Rechazada"
+    },
+    "documents": {
+      "receipt": "Nota {{number}}",
+      "issue": "N° {{number}}",
+      "transfer": "Transferencia {{number}}"
+    }
+  },
+  "products": {
+    "photoUploadError": "No se pudo subir la foto.",
+    "photoUploaded": "Foto de {{name}} guardada.",
+    "photoUpload": "Subir o cambiar la foto (máx. 5 MB)",
+    "title": "Productos",
+    "new": "Nuevo producto",
+    "filters": {
+      "search": "Buscar por nombre del producto o código",
+      "department": "Departamento",
+      "status": "Estado",
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "columns": {
+      "photo": "Foto",
+      "code": "Código",
+      "name": "Nombre del producto",
+      "department": "Departamento",
+      "status": "Estado"
+    },
+    "actions": {
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "form": {
+      "photoError": "El producto se guardó, pero la foto no.",
+      "photoTooLarge": "La foto pesa más de 5 MB.",
+      "photoInvalid": "El archivo no es una imagen.",
+      "photoHint": "JPG, PNG o WEBP de hasta 5 MB.",
+      "removePhoto": "Quitar foto",
+      "changePhoto": "Cambiar foto",
+      "choosePhoto": "Elegir foto",
+      "noPhoto": "Sin foto",
+      "photo": "Foto del producto",
+      "newTitle": "Nuevo producto",
+      "editTitle": "Editar producto",
+      "code": "Código",
+      "name": "Nombre del producto",
+      "department": "Departamento",
+      "subDepartment": "Subdepartamento",
+      "mediaType": "Tipo de producto",
+      "isActive": "Activo",
+      "success": "Producto guardado correctamente.",
+      "error": "No se pudo guardar el producto.",
+      "similarTitle": "Ya existen productos con un nombre parecido:",
+      "similarHint": "Revisa que no sea uno de estos. No se puede repetir el mismo nombre en el mismo departamento y subdepartamento.",
+      "useExisting": "Usar este"
+    },
+    "delete": {
+      "title": "Eliminar producto",
+      "message": "¿Seguro que deseas eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+      "success": "Producto eliminado correctamente.",
+      "error": "No se pudo eliminar el producto."
+    }
+  },
+  "productPhoto": {
+    "enlarge": "Ver foto",
+    "none": "Sin foto"
+  }
+}

@@ -1,1 +1,143 @@
 /* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@import "@fontsource/open-sans/400.css";
+@import "@fontsource/open-sans/500.css";
+@import "@fontsource/open-sans/600.css";
+@import "@fontsource/open-sans/700.css";
+@import "./styles/theme";
+@import "@angular/cdk/overlay-prebuilt.css";
+
+/* Color de texto por defecto: todo lo que no indica uno propio usa el del tema. Sin esto el
+   navegador ponía negro, que en modo oscuro no se leía. */
+body {
+  color: var(--color-foreground);
+}
+
+/* Modo oscuro: los controles nativos (listas desplegables, casillas, calendario) también oscuros. */
+.dark {
+  color-scheme: dark;
+}
+
+/* Sombras suaves en todo el sistema: tarjetas, campos y botones se despegan del fondo.
+   Van con :where() (sin peso), así el anillo de foco (focus:ring) y cualquier shadow-* propio
+   de un elemento siguen mandando. */
+:root {
+  --app-shadow-field: 0 1px 2px rgb(29 52 86 / 0.10);
+  --app-shadow-card: 0 1px 3px rgb(29 52 86 / 0.10), 0 8px 24px rgb(29 52 86 / 0.10);
+}
+.dark {
+  --app-shadow-field: 0 1px 2px rgb(0 0 0 / 0.35);
+  --app-shadow-card: 0 1px 3px rgb(0 0 0 / 0.5), 0 8px 24px rgb(0 0 0 / 0.45);
+}
+/* En la capa "components": por debajo de las utilidades de Tailwind (el anillo de foco gana). */
+@layer components {
+  :where(.rounded-lg.border, .rounded-md.border.p-4) {
+    box-shadow: var(--app-shadow-card);
+  }
+  :where(input.rounded-md.border, textarea.rounded-md.border, button.rounded-md.border, button.rounded-md.bg-primary, a.rounded-md.bg-primary) {
+    box-shadow: var(--app-shadow-field);
+  }
+}
+
+.app-dialog-backdrop {
+  background-color: color-mix(in srgb, var(--color-brand-900) 60%, transparent);
+}
+
+.app-dialog-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Scroll con nuestro diseño (Firefox) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+/* Scroll con nuestro diseño (navegadores basados en WebKit/Blink) */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-muted-foreground);
+}
+
+/* El navegador no permite recolorear las flechas nativas de input[type=number] para
+   que sigan nuestro diseño — solo se pueden mostrar u ocultar. Las ocultamos. */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Submenú del menú lateral: un tronco vertical y una curva hacia cada opción (en vez de la
+   línea recta). Cada opción dibuja su curva (::before) y, si no es la última, el tramo de
+   tronco que baja hasta la siguiente (::after). El bloque de un subgrupo abierto no lleva curva. */
+:root {
+  --menu-tree-line: color-mix(in srgb, var(--color-muted-foreground) 45%, var(--color-surface));
+}
+.menu-tree > * {
+  position: relative;
+}
+.menu-tree > :not(.menu-tree-sub)::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: -4px;
+  width: 18px;
+  height: calc(50% + 4px);
+  border-left: 1.5px solid var(--menu-tree-line);
+  border-bottom: 1.5px solid var(--menu-tree-line);
+  border-bottom-left-radius: 10px;
+  pointer-events: none;
+}
+.menu-tree > :first-child::before {
+  top: -6px;
+  height: calc(50% + 6px);
+}
+.menu-tree > :not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  bottom: -4px;
+  border-left: 1.5px solid var(--menu-tree-line);
+  pointer-events: none;
+}
+/* El bloque de un subgrupo abierto: el tronco lo atraviesa entero solo si hay más opciones abajo. */
+.menu-tree > .menu-tree-sub:not(:last-child)::after {
+  top: -4px;
+}
+/* Subgrupo abierto que es lo último: el tronco termina en su curva, no sigue por sus hijos. */
+.menu-tree > :has(+ .menu-tree-sub:last-child)::after {
+  display: none;
+}
+
+/* Alto del menú inferior del celular (0 en pantallas md+). Lo usan el contenido y las barras
+   fijas de abajo (total del pedido, guardar precios) para quedar justo encima del menú. */
+:root {
+  --bottom-nav-h: calc(4rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 48rem) {
+  :root {
+    --bottom-nav-h: 0px;
+  }
+}

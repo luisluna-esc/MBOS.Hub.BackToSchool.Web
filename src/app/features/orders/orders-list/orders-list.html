@@ -1,0 +1,69 @@
+<div class="mx-auto flex max-w-5xl flex-col gap-4">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-xl font-semibold text-foreground">{{ seesAll ? 'Pedidos del día' : 'Mis pedidos' }}</h1>
+      <p class="text-sm text-muted-foreground">{{ totals().count }} pedidos · Bs {{ money(totals().total) }}</p>
+    </div>
+    @if (isPromoter) {
+      <a routerLink="/orders/new" class="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"><app-icon name="cart-plus" size="size-4" /> Nuevo pedido</a>
+    }
+  </div>
+
+  <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+    <input
+      class="flex-1 rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-accent"
+      placeholder="N° de ficha o nombre…"
+      appAllowed="name"
+      [maxlength]="rules.search.max"
+      inputmode="search"
+      [ngModel]="ticket()"
+      (ngModelChange)="ticket.set($event)"
+    />
+    <input
+      type="date"
+      class="rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground"
+      [ngModel]="date()"
+      (ngModelChange)="changeDate($event)"
+    />
+  </div>
+
+  <div class="-mx-3 flex gap-2 overflow-x-auto px-3 md:mx-0 md:px-0">
+    @for (s of statuses; track s) {
+      <button type="button" class="shrink-0 rounded-full border px-3 py-1.5 text-sm"
+        [class]="status() === s ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-surface text-foreground'"
+        (click)="status.set(s)">
+        {{ s ? statusLabels[s] : 'Todos' }}
+      </button>
+    }
+  </div>
+
+  @if (errorCode()) {
+    <div class="rounded-lg border border-border bg-surface"><app-error-state [code]="errorCode()!" /></div>
+  } @else if (loading()) {
+    @for (i of [1, 2, 3]; track i) {
+      <div class="h-20 animate-pulse rounded-lg bg-surface"></div>
+    }
+  } @else {
+    <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
+      @for (o of visible(); track o.saleOrderId) {
+        <button type="button" class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3 text-left transition-colors hover:border-primary" (click)="open(o)">
+          <span class="flex size-14 shrink-0 flex-col items-center justify-center rounded-md bg-primary text-primary-foreground">
+            <span class="text-[10px] leading-none opacity-80">FICHA</span>
+            <span class="text-2xl leading-none font-bold">{{ o.ticketNumber }}</span>
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block truncate font-medium text-foreground">{{ o.customerName }}</span>
+            <span class="block text-xs text-muted-foreground">
+              {{ o.createdAt | date: 'HH:mm' }} · {{ o.itemCount }} art.
+              @if (seesAll) { · {{ o.promoterName }} }
+            </span>
+            <span class="mt-1 inline-block rounded-full px-2 py-0.5 text-[11px] font-semibold" [class]="statusClasses[o.status]">{{ statusLabels[o.status] }}</span>
+          </span>
+          <span class="shrink-0 font-semibold text-foreground">Bs {{ money(o.total) }}</span>
+        </button>
+      } @empty {
+        <p class="col-span-full rounded-lg bg-surface p-6 text-center text-sm text-muted-foreground">No hay pedidos para mostrar.</p>
+      }
+    </div>
+  }
+</div>

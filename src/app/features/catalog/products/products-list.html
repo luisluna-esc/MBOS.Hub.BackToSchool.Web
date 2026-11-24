@@ -1,0 +1,109 @@
+<div class="flex flex-col gap-4 pb-20">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-xl font-semibold text-foreground">Productos y precios</h1>
+      <p class="text-sm text-muted-foreground">{{ totalRecords() }} productos. Escriba el precio y guarde al final.</p>
+    </div>
+    <button type="button" class="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground" (click)="openForm(null)">
+      <app-icon name="add-square" size="size-4" /> Nuevo producto
+    </button>
+  </div>
+
+  <div class="flex flex-col gap-2 lg:flex-row lg:items-center">
+    <input
+      class="flex-1 rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-accent"
+      placeholder="Buscar por nombre o código…"
+      appAllowed="text"
+      [maxlength]="rules.search.max"
+      [ngModel]="search()"
+      (ngModelChange)="onSearch($event)"
+    />
+    <div class="flex flex-wrap gap-2">
+      @for (s of sections; track s) {
+        <button type="button" class="rounded-full border px-3 py-1.5 text-sm"
+          [class]="section() === s ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-surface text-foreground'"
+          (click)="section.set(s); reload()">
+          {{ s ? sectionLabels[s] : 'Todos' }}
+        </button>
+      }
+      <label class="flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 text-sm text-foreground">
+        <input type="checkbox" [ngModel]="withoutPrice()" (ngModelChange)="withoutPrice.set($event); reload()" /> Sin precio
+      </label>
+      <label class="flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 text-sm text-foreground">
+        <input type="checkbox" [ngModel]="showInactive()" (ngModelChange)="showInactive.set($event); reload()" /> Ver inactivos
+      </label>
+    </div>
+  </div>
+
+  @if (errorCode()) {
+    <div class="rounded-lg border border-border bg-surface"><app-error-state [code]="errorCode()!" /></div>
+  } @else {
+    <div class="overflow-x-auto rounded-lg border border-border bg-surface">
+      <table class="w-full text-sm">
+        <thead class="bg-background text-left text-xs text-muted-foreground uppercase">
+          <tr>
+            <th class="px-3 py-2">Código</th>
+            <th class="px-3 py-2">Producto</th>
+            <th class="hidden px-3 py-2 md:table-cell">Sección</th>
+            <th class="px-3 py-2 text-right">Stock</th>
+            <th class="hidden px-3 py-2 text-right md:table-cell">Costo</th>
+            <th class="w-32 px-3 py-2 text-right">Precio (Bs)</th>
+            <th class="w-10 px-3 py-2"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-border" [class.opacity-50]="loading()">
+          @for (row of rows(); track row.productId) {
+            <tr [class.opacity-60]="!row.isActive">
+              <td class="px-3 py-1.5 text-muted-foreground">{{ row.code || '—' }}</td>
+              <td class="px-3 py-1.5 text-foreground">
+                {{ row.garmentName ? row.garmentName + ' · talla ' + row.size : row.name }}
+                @if (!row.isActive) { <span class="text-xs text-danger">(inactivo)</span> }
+              </td>
+              <td class="hidden px-3 py-1.5 text-muted-foreground md:table-cell">{{ sectionLabels[row.section] }}</td>
+              <td class="px-3 py-1.5 text-right" [class.text-warning]="row.stock <= 0">{{ row.stock }}</td>
+              <td class="hidden px-3 py-1.5 text-right text-muted-foreground md:table-cell">{{ row.unitCost !== null ? money(row.unitCost) : '—' }}</td>
+              <td class="px-3 py-1">
+                <input
+                  type="number"
+                  min="0"
+                  [max]="rules.price.max"
+                  step="0.5"
+                  inputmode="decimal"
+                  class="w-full rounded-md border px-2 py-1 text-right text-foreground"
+                  [class]="edited()[row.productId] !== undefined ? 'border-accent bg-accent/10 font-semibold' : 'border-border bg-surface'"
+                  [ngModel]="priceOf(row)"
+                  (ngModelChange)="setPrice(row, $event)"
+                />
+              </td>
+              <td class="px-3 py-1.5">
+                <button type="button" class="text-accent" aria-label="Editar" (click)="openForm(row)"><app-icon name="pencil" size="size-4" /></button>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="7" class="px-3 py-6 text-center text-muted-foreground">{{ loading() ? 'Cargando…' : 'Sin resultados.' }}</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex items-center justify-center gap-3 text-sm">
+      <button type="button" class="rounded-md border border-border px-3 py-1 disabled:opacity-40" [disabled]="pageNumber() <= 1" (click)="goToPage(pageNumber() - 1)">Anterior</button>
+      <span class="text-muted-foreground">Página {{ pageNumber() }} de {{ pages() }}</span>
+      <button type="button" class="rounded-md border border-border px-3 py-1 disabled:opacity-40" [disabled]="pageNumber() >= pages()" (click)="goToPage(pageNumber() + 1)">Siguiente</button>
+    </div>
+  }
+</div>
+
+@if (editedCount() > 0) {
+  <div class="fixed inset-x-0 bottom-[var(--bottom-nav-h)] z-20 border-t border-border bg-surface/95 p-3 backdrop-blur md:left-auto md:w-[calc(100%-16rem)]">
+    <div class="mx-auto flex max-w-5xl items-center justify-between gap-3">
+      <span class="text-sm text-foreground">{{ editedCount() }} precio(s) sin guardar</span>
+      <div class="flex gap-2">
+        <button type="button" class="rounded-full border border-border px-4 py-2 text-sm text-foreground" (click)="edited.set({})">Descartar</button>
+        <button type="button" class="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50" [disabled]="saving()" (click)="savePrices()">
+          {{ saving() ? 'Guardando…' : 'Guardar precios' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,198 @@
+<div class="flex w-full flex-col gap-1">
+  @if (label()) {
+    <label [id]="pickerId + '-label'" class="text-sm font-medium text-foreground">
+      {{ label() }}
+    </label>
+  }
+
+  <!-- Campo de texto de verdad: la fecha se escribe (dd/mm/aaaa, la "/" se pone sola) o se elige
+       en el calendario con el botón de la derecha. -->
+  <div
+    #origin="cdkOverlayOrigin"
+    cdkOverlayOrigin
+    class="flex w-full items-center rounded-md border bg-surface text-sm text-foreground shadow-sm transition-colors focus-within:ring-2 focus-within:ring-accent"
+    [class.border-border]="!showError && !typedError()"
+    [class.border-danger]="showError || typedError()"
+    [class.opacity-60]="disabled()"
+  >
+    <input
+      #trigger
+      type="text"
+      inputmode="numeric"
+      autocomplete="off"
+      [id]="pickerId"
+      [disabled]="disabled()"
+      placeholder="dd/mm/aaaa"
+      [value]="typed() ?? displayValue() ?? ''"
+      [attr.aria-labelledby]="label() ? pickerId + '-label' : null"
+      [attr.aria-invalid]="showError"
+      class="w-full min-w-0 flex-1 rounded-l-md bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed"
+      (focus)="onFieldFocus($event)"
+      (mouseup)="onFieldMouseUp($event)"
+      (input)="onTyping($event)"
+      (keydown)="onTriggerKeydown($event)"
+      (blur)="onTriggerBlur()"
+    />
+    <button
+      type="button"
+      tabindex="-1"
+      class="flex shrink-0 items-center self-stretch rounded-r-md px-2.5 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-foreground disabled:cursor-not-allowed"
+      [disabled]="disabled()"
+      [attr.aria-haspopup]="'dialog'"
+      [attr.aria-expanded]="open()"
+      aria-label="Abrir calendario"
+      (mousedown)="$event.preventDefault()"
+      (click)="toggle()"
+    >
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="size-4 shrink-0">
+      <path
+        d="M8 2V5M16 2V5"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+      />
+      <path
+        d="M3.5 9.5H20.5"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+      />
+      <rect x="3.5" y="4.5" width="17" height="16" rx="2" stroke="currentColor" stroke-width="1.5" />
+    </svg>
+    </button>
+  </div>
+
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="open()"
+    [cdkConnectedOverlayPositions]="overlayPositions"
+    [cdkConnectedOverlayHasBackdrop]="true"
+    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+    (backdropClick)="close()"
+    (detach)="close()"
+  >
+    <div
+      #panel
+      tabindex="-1"
+      class="w-64 rounded-md border border-border bg-surface p-3 shadow-lg focus:outline-none"
+      (keydown)="onPanelKeydown($event)"
+    >
+      @if (view() === 'days') {
+        <div class="mb-2 flex items-center justify-between">
+          <button
+            type="button"
+            class="flex size-7 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+            aria-label="Mes anterior"
+            (click)="prevMonth()"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+              <path d="M15 6l-6 6 6 6" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="rounded px-2 py-1 text-sm font-medium capitalize text-foreground transition-colors hover:bg-background"
+            (click)="openYearView()"
+          >
+            {{ monthLabel() }}
+          </button>
+          <button
+            type="button"
+            class="flex size-7 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+            aria-label="Mes siguiente"
+            (click)="nextMonth()"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground">
+          @for (day of weekdayLabels; track $index) {
+            <span class="py-1">{{ day }}</span>
+          }
+        </div>
+
+        <div class="grid grid-cols-7 gap-1">
+          @for (day of calendarDays(); track day.date.getTime()) {
+            <button
+              type="button"
+              class="flex size-8 items-center justify-center rounded-md text-sm transition-colors"
+              [disabled]="day.disabled"
+              [class.text-muted-foreground]="(!day.inCurrentMonth || day.disabled) && !isSelected(day)"
+              [class.text-foreground]="day.inCurrentMonth && !day.disabled && !isSelected(day)"
+              [class.opacity-40]="day.disabled"
+              [class.cursor-not-allowed]="day.disabled"
+              [class.hover:bg-brand-300]="!isSelected(day) && !day.disabled"
+              [class.bg-primary]="isSelected(day)"
+              [class.text-primary-foreground]="isSelected(day)"
+              [class.font-semibold]="day.isToday && !isSelected(day)"
+              [class.ring-2]="isFocused(day)"
+              [class.ring-accent]="isFocused(day)"
+              tabindex="-1"
+              (click)="selectDay(day)"
+            >
+              {{ day.label }}
+            </button>
+          }
+        </div>
+      } @else {
+        <div class="mb-2 flex items-center justify-between">
+          <button
+            type="button"
+            class="flex size-7 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+            aria-label="Años anteriores"
+            (click)="prevYearPage()"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+              <path d="M15 6l-6 6 6 6" />
+            </svg>
+          </button>
+          <span class="text-sm font-medium text-foreground">{{ yearRangeLabel() }}</span>
+          <button
+            type="button"
+            class="flex size-7 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+            aria-label="Años siguientes"
+            (click)="nextYearPage()"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-1">
+          @for (year of yearOptions(); track year) {
+            <button
+              type="button"
+              class="rounded-md py-2 text-sm transition-colors"
+              [disabled]="isYearDisabled(year)"
+              [class.text-foreground]="year !== viewYear() && !isYearDisabled(year)"
+              [class.text-muted-foreground]="isYearDisabled(year)"
+              [class.opacity-40]="isYearDisabled(year)"
+              [class.cursor-not-allowed]="isYearDisabled(year)"
+              [class.hover:bg-brand-300]="year !== viewYear() && !isYearDisabled(year)"
+              [class.bg-primary]="year === viewYear()"
+              [class.text-primary-foreground]="year === viewYear()"
+              (click)="selectYear(year)"
+            >
+              {{ year }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </ng-template>
+
+  @if (typedError()) {
+    <p class="min-h-4 text-xs text-danger" role="alert">{{ typedError() }}</p>
+  } @else if (showError) {
+    <p class="min-h-4 text-xs text-danger">{{ errorMessage }}</p>
+  } @else if (hint()) {
+    <p class="min-h-4 text-xs text-muted-foreground">{{ hint() }}</p>
+  } @else {
+    <p class="min-h-4 text-xs" aria-hidden="true">&nbsp;</p>
+  }
+</div>

@@ -1,0 +1,69 @@
+<div class="flex flex-col gap-4">
+  <div>
+    <h1 class="text-xl font-semibold text-foreground">Listas por curso</h1>
+    <p class="text-sm text-muted-foreground">Lo que ve el promotor al elegir el curso. Los "opcionales" aparecen desmarcados (como la agenda).</p>
+  </div>
+
+  @if (errorCode()) {
+    <div class="rounded-lg border border-border bg-surface"><app-error-state [code]="errorCode()!" /></div>
+  } @else {
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-[16rem_1fr]">
+      <nav class="flex gap-2 overflow-x-auto lg:flex-col lg:overflow-visible">
+        @for (c of courses(); track c.courseId) {
+          <button type="button" class="flex shrink-0 items-center justify-between gap-3 rounded-md border px-3 py-2 text-left text-sm"
+            [class]="selected()?.courseId === c.courseId ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-surface text-foreground'"
+            (click)="select(c)">
+            <span>{{ c.name }}</span>
+            <span class="text-xs opacity-70">{{ c.itemCount }}</span>
+          </button>
+        }
+      </nav>
+
+      @if (selected(); as course) {
+        <section class="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="font-semibold text-foreground">{{ course.name }} <span class="text-sm font-normal text-muted-foreground">· {{ items().length }} ítems</span></h2>
+            <button type="button" class="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-40" [disabled]="!dirty() || saving()" (click)="save()">
+              {{ saving() ? 'Guardando…' : 'Guardar lista' }}
+            </button>
+          </div>
+
+          <ul class="flex flex-col divide-y divide-border rounded-md border border-border">
+            @for (item of items(); track item.productId; let i = $index) {
+              <li class="flex items-center gap-2 px-3 py-2 text-sm">
+                <span class="flex flex-col">
+                  <button type="button" class="text-muted-foreground disabled:opacity-20" [disabled]="i === 0" (click)="move(i, -1)" aria-label="Subir"><app-icon name="map-arrow-up" size="size-4" /></button>
+                  <button type="button" class="text-muted-foreground disabled:opacity-20" [disabled]="i === items().length - 1" (click)="move(i, 1)" aria-label="Bajar"><app-icon name="map-arrow-down" size="size-4" /></button>
+                </span>
+                <span class="min-w-0 flex-1">
+                  <span class="block text-foreground">{{ item.name }}</span>
+                  <span class="text-xs text-muted-foreground">{{ item.code || 'sin código' }} · {{ item.price > 0 ? 'Bs ' + money(item.price) : 'sin precio' }}</span>
+                </span>
+                <button type="button" class="rounded-full border px-2.5 py-1 text-xs"
+                  [class]="item.isDefaultSelected ? 'border-primary text-accent' : 'border-border text-muted-foreground'"
+                  (click)="toggleDefault(item)">
+                  {{ item.isDefaultSelected ? 'Marcado' : 'Opcional' }}
+                </button>
+                <button type="button" class="px-1 text-danger" aria-label="Quitar" (click)="remove(item)"><app-icon name="trash-bin-trash" size="size-4" /></button>
+              </li>
+            } @empty {
+              <li class="px-3 py-6 text-center text-sm text-muted-foreground">La lista está vacía.</li>
+            }
+          </ul>
+
+          <div class="flex flex-col gap-2">
+            <input class="rounded-md border border-border bg-background px-3 py-2 text-foreground outline-none focus:ring-2 focus:ring-accent"
+              placeholder="Agregar un texto del catálogo (nombre o código)…" appAllowed="text" [maxlength]="rules.search.max" [ngModel]="search()" (ngModelChange)="search.set($event)" />
+            @for (p of results(); track p.productId) {
+              <button type="button" class="flex items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-background" (click)="add(p)">
+                <span class="text-accent"><app-icon name="add-square" size="size-4" /></span>
+                <span class="flex-1 text-foreground">{{ p.name }}</span>
+                <span class="text-xs text-muted-foreground">{{ p.code }}</span>
+              </button>
+            }
+          </div>
+        </section>
+      }
+    </div>
+  }
+</div>

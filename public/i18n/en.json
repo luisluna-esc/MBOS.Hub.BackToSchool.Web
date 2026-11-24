@@ -1,0 +1,501 @@
+{
+  "shortcuts": {
+    "keySpace": "Space",
+    "filterEnter": "In filters: search right away",
+    "switchToggle": "Switch (Yes / No): toggle it",
+    "dateOpen": "Date: open the calendar (move with arrows)",
+    "dateMonth": "Open calendar: previous or next month",
+    "dateDay": "Date: one day more or less",
+    "dateToday": "Date: today",
+    "dateType": "Date: type it (13102026, 13/10/26 or 13/10)",
+    "selectPick": "Open list: choose (Tab also moves to the next field)",
+    "selectMove": "Open list: move between options",
+    "selectType": "Option list: type the first letters to choose",
+    "selectOpen": "Option list: open it",
+    "prevField": "Go back to the previous field",
+    "nextField": "Go to the next field",
+    "groupFields": "Fields and filters",
+    "or": "or",
+    "title": "Keyboard shortcuts",
+    "onMac": "Mac keys",
+    "onWindows": "Windows keys",
+    "then": "then",
+    "footer": "Letter shortcuts do not work while typing in a field; Save, Esc and Ctrl/⌘ shortcuts do.",
+    "groupGeneral": "General",
+    "groupForms": "Forms",
+    "groupLists": "Lists",
+    "groupGoTo": "Go to",
+    "palette": "Search a screen and go to it",
+    "help": "Show this shortcut list",
+    "sidebar": "Show or hide the side menu",
+    "cancel": "Close the open window",
+    "save": "Save (or Continue, in the header)",
+    "new": "New record (product, issue, transfer...)",
+    "addLine": "Add a product",
+    "enterPrice": "In the price: add another line",
+    "productArrows": "In the product: choose from the list",
+    "productTab": "In the product: confirm and move to the next field",
+    "search": "Go to the list search box",
+    "nextPage": "Next page",
+    "prevPage": "Previous page",
+    "goHome": "Home",
+    "goProducts": "Go to Products & prices",
+    "paletteSearch": "Type the name of a screen...",
+    "paletteEmpty": "No screens with that name.",
+    "paletteHint": "↑ ↓ to choose, Enter to open, Esc to close",
+    "goNewOrder": "Go to New order",
+    "goOrders": "Go to Today's orders",
+    "goWarehouse": "Go to Warehouse"
+  },
+  "language": {
+    "select": "Language",
+    "es": "Spanish",
+    "en": "English",
+    "pt": "Portuguese"
+  },
+  "shell": {
+    "collapseMenu": "Collapse menu",
+    "expandMenu": "Expand menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "nav": {
+    "home": "Home",
+    "newOrder": "New order",
+    "orders": "Today's orders",
+    "warehouse": "Warehouse",
+    "catalog": "Catalog",
+    "products": "Products & prices",
+    "courses": "Lists by grade",
+    "schools": "Schools",
+    "admin": "Administration",
+    "users": "Users",
+    "roles": "Roles",
+    "permissions": "Permissions"
+  },
+  "roles": {
+    "title": "Roles",
+    "new": "New role",
+    "filters": {
+      "search": "Search by name",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "columns": {
+      "name": "Name",
+      "description": "Description",
+      "status": "Status"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "permissions": "Permissions",
+      "menus": "Menus"
+    },
+    "form": {
+      "newTitle": "New role",
+      "editTitle": "Edit role",
+      "name": "Name",
+      "description": "Description",
+      "isActive": "Active",
+      "success": "Role saved successfully.",
+      "error": "The role could not be saved."
+    },
+    "delete": {
+      "title": "Delete role",
+      "message": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+      "success": "Role deleted successfully.",
+      "error": "The role could not be deleted."
+    },
+    "permissions": {
+      "title": "Permissions",
+      "loading": "Loading...",
+      "empty": "No permissions available.",
+      "error": "The permission could not be updated.",
+      "locked": "The M-BOS role always keeps full access; its permissions cannot be changed."
+    },
+    "menus": {
+      "title": "Visible menus",
+      "general": "General",
+      "loading": "Loading...",
+      "empty": "No menu items available.",
+      "error": "The menu could not be updated.",
+      "hint": "Check the modules this role can see. A module with no role checked is not visible to anyone."
+    }
+  },
+  "permissions": {
+    "title": "Permissions",
+    "new": "New permission",
+    "filters": {
+      "search": "Search by name",
+      "module": "Module",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "columns": {
+      "code": "Code",
+      "name": "Name",
+      "module": "Module",
+      "description": "Description",
+      "status": "Status"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "form": {
+      "newTitle": "New permission",
+      "editTitle": "Edit permission",
+      "code": "Code",
+      "name": "Name",
+      "module": "Module",
+      "description": "Description",
+      "isActive": "Active",
+      "success": "Permission saved successfully.",
+      "error": "The permission could not be saved."
+    },
+    "delete": {
+      "title": "Delete permission",
+      "message": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+      "success": "Permission deleted successfully.",
+      "error": "The permission could not be deleted."
+    }
+  },
+  "users": {
+    "title": "Users",
+    "new": "New user",
+    "filters": {
+      "search": "Search by name, username, or email",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "columns": {
+      "name": "Name",
+      "username": "Username",
+      "email": "Email",
+      "status": "Status"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "roles": "Roles"
+    },
+    "form": {
+      "newTitle": "New user",
+      "editTitle": "Edit user",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "emailInvalid": "Email must include an \"@\".",
+      "username": "Username",
+      "password": "Password",
+      "passwordHint": "Leave blank to keep the current password.",
+      "confirmPassword": "Confirm password",
+      "passwordMismatch": "Passwords do not match.",
+      "isActive": "Active",
+      "success": "User saved successfully.",
+      "error": "The user could not be saved."
+    },
+    "delete": {
+      "title": "Delete user",
+      "message": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+      "success": "User deleted successfully.",
+      "error": "The user could not be deleted."
+    },
+    "roles": {
+      "title": "Roles",
+      "loading": "Loading...",
+      "empty": "No roles available.",
+      "error": "The role could not be updated."
+    }
+  },
+  "common": {
+    "logout": "Sign out",
+    "loading": "Loading..."
+  },
+  "home": {
+    "greeting": "Hi, {{username}}",
+    "placeholder": "This is the dashboard's starting point. Soon you'll be able to navigate to inventory, finances, and more.",
+    "dashboard": {
+      "issuesThisMonth": "Issues this month",
+      "receiptsThisMonth": "Receipts this month",
+      "pendingReceivable": "Pending receivable",
+      "paymentsThisMonth": "Collections this month",
+      "issuesChartTitle": "Issues in the last six months",
+      "receivableChartTitle": "Accounts Receivable: pending vs paid",
+      "departmentChartTitle": "Issues this month by department",
+      "departmentChartEmpty": "No issues this month."
+    },
+    "yourRole": "Your role: {{role}}",
+    "whatYouDo": "What you are in charge of",
+    "roles": {
+      "mbos": {
+        "summary": "You manage the whole system: users, roles and the menus each one sees. You can see every warehouse and account movement.",
+        "tasks": [
+          "Create users and assign their role",
+          "Decide which menus each role sees",
+          "Review the financial summary and all reports"
+        ]
+      },
+      "tesorero": {
+        "summary": "You look after the money and authorize changes. You follow the warehouse and the accounts, and approve or reject the edits and voids others request.",
+        "tasks": [
+          "Approve or reject edits and voids of receipts and issues",
+          "Follow accounts receivable and this month's collections",
+          "Check inventory and finance reports"
+        ]
+      },
+      "contador": {
+        "summary": "You keep the warehouse accounting: what comes in, what goes out and what it is worth. You also authorize the edits and voids the Accounting Assistant requests.",
+        "tasks": [
+          "Record material receipts and issues",
+          "Authorize edits and voids",
+          "Review the kardex, stock and reports"
+        ]
+      },
+      "auxiliar": {
+        "summary": "You record the warehouse day to day: purchases and receipts, issues to pastors and transfers between warehouses. You keep clients, suppliers and products up to date.",
+        "tasks": [
+          "Record receipts, issues and transfers",
+          "Add and correct clients, suppliers and products",
+          "Ask the Accountant or Treasurer to edit or void a record"
+        ]
+      },
+      "pastor": {
+        "summary": "You check your own account: the material you were given and what you still owe.",
+        "tasks": [
+          "See the material you received",
+          "Check your pending balance"
+        ]
+      },
+      "caja": {
+        "summary": "You receive accounts receivable payments and record each deposit, product by product.",
+        "tasks": [
+          "Record accounts receivable deposits",
+          "See which accounts are still pending"
+        ]
+      }
+    },
+    "yourRoleLabel": "Your role"
+  },
+  "dialog": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm"
+  },
+  "table": {
+    "moreActions": "More options",
+    "empty": "No data to display.",
+    "previous": "Previous",
+    "next": "Next",
+    "pageInfo": "Page {{page}} of {{total}}",
+    "pageSize": "Per page:",
+    "actions": "Options"
+  },
+  "filters": {
+    "clear": "Clear"
+  },
+  "errorState": {
+    "400": {
+      "title": "Invalid request",
+      "description": "The request could not be processed. Check the data and try again."
+    },
+    "401": {
+      "title": "Unauthorized",
+      "description": "You need to sign in to access this content."
+    },
+    "403": {
+      "title": "Access denied",
+      "description": "You don't have permission to view this section."
+    },
+    "404": {
+      "title": "Page not found",
+      "description": "The content you're looking for doesn't exist or was moved."
+    },
+    "500": {
+      "title": "Server error",
+      "description": "Something unexpected happened. Please try again later."
+    },
+    "503": {
+      "title": "Service unavailable",
+      "description": "The service isn't available right now. Please try again later."
+    },
+    "default": {
+      "title": "An error occurred",
+      "description": "Something went wrong. Please try again."
+    }
+  },
+  "login": {
+    "title": "Sign in",
+    "welcomeTitle": "Back to school",
+    "welcomeDescription": "Orders for textbooks, uniforms and school supplies: from the promoter to the warehouse and the cashier, paperless.",
+    "usernameOrEmail": "Username or email",
+    "password": "Password",
+    "submit": "Sign in",
+    "error": "Sign-in failed."
+  },
+  "profile": {
+    "title": "My profile",
+    "fullName": "Name",
+    "username": "Username",
+    "email": "Email",
+    "roles": "Roles"
+  },
+  "inbox": {
+    "toast": {
+      "unread": "You have {{count}} unread answer(s) in your Inbox",
+      "new": "{{count}} new answer(s) arrived in your Inbox",
+      "hint": "Check them in Inbox, Answers tab.",
+      "copy": "Copy No.",
+      "copied": "Copied",
+      "copyHint": "Copy the number and search it in History or the Inbox."
+    },
+    "alreadySeen": "Already seen",
+    "newMark": "New",
+    "emptyTabs": {
+      "signed": "You have not signed or authorized anything yet.",
+      "answers": "No answers to your requests yet.",
+      "pending": "Nothing pending.",
+      "unread": "You have no new answers.",
+      "seen": "No seen answers yet."
+    },
+    "actions": {
+      "open": "Open",
+      "markSeen": "Mark as seen",
+      "markAllSeen": "Mark all as seen",
+      "reviewQueue": "Review one by one"
+    },
+    "columns": {
+      "kind": "Type",
+      "document": "Document",
+      "detail": "Detail",
+      "date": "Date",
+      "result": "Result"
+    },
+    "documentTypes": {
+      "receipt": "Receipt",
+      "issue": "Issue",
+      "transfer": "Transfer"
+    },
+    "filters": {
+      "search": "No. or detail",
+      "kind": "Type",
+      "document": "Document",
+      "dateFrom": "From",
+      "dateTo": "To"
+    },
+    "tabHints": {
+      "signed": "What you verified, approved or rejected",
+      "answers": "How your requests and documents ended",
+      "pending": "To sign or authorize",
+      "unread": "New answers to your requests",
+      "seen": "Answers you already checked"
+    },
+    "tabs": {
+      "signed": "What I signed",
+      "answers": "Answers",
+      "pending": "Pending",
+      "unread": "Unread",
+      "seen": "Seen"
+    },
+    "title": "Inbox",
+    "description": "What you have to sign or authorize, and the answers to your requests.",
+    "loading": "Loading...",
+    "allDone": "You have nothing pending.",
+    "empty": "Nothing here.",
+    "more": "And {{count}} more.",
+    "sections": {
+      "toVerify": "To verify and sign",
+      "toApprove": "To approve and sign",
+      "voidRequests": "Voids to authorize",
+      "receiptEdits": "Corrections to authorize",
+      "myResults": "My requests (last 15 days)"
+    },
+    "kinds": {
+      "issueEdit": "Issue correction",
+      "reviewSigned": "Signature",
+      "reviewApproved": "Document approved",
+      "toVerify": "Entered, needs verification",
+      "toApprove": "Verified, needs approval",
+      "voidRequest": "Void",
+      "receiptEdit": "Receipt correction",
+      "reviewRejected": "Document rejected"
+    },
+    "results": {
+      "reabierto": "You reopened",
+      "rechazado": "You rejected",
+      "aprobado": "You approved",
+      "verificado": "You verified",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "documents": {
+      "receipt": "Note {{number}}",
+      "issue": "No. {{number}}",
+      "transfer": "Transfer {{number}}"
+    }
+  },
+  "products": {
+    "photoUploadError": "The photo could not be uploaded.",
+    "photoUploaded": "Photo of {{name}} saved.",
+    "photoUpload": "Upload or change the photo (max. 5 MB)",
+    "title": "Products",
+    "new": "New product",
+    "filters": {
+      "search": "Search by product name or code",
+      "department": "Department",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "columns": {
+      "photo": "Photo",
+      "code": "Code",
+      "name": "Product name",
+      "department": "Department",
+      "status": "Status"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "form": {
+      "photoError": "The product was saved, but the photo was not.",
+      "photoTooLarge": "The photo is larger than 5 MB.",
+      "photoInvalid": "The file is not an image.",
+      "photoHint": "JPG, PNG or WEBP up to 5 MB.",
+      "removePhoto": "Remove photo",
+      "changePhoto": "Change photo",
+      "choosePhoto": "Choose photo",
+      "noPhoto": "No photo",
+      "photo": "Product photo",
+      "newTitle": "New product",
+      "editTitle": "Edit product",
+      "code": "Code",
+      "name": "Product name",
+      "department": "Department",
+      "subDepartment": "Sub-department",
+      "mediaType": "Product type",
+      "isActive": "Active",
+      "success": "Product saved successfully.",
+      "error": "The product could not be saved.",
+      "similarTitle": "Products with a similar name already exist:",
+      "similarHint": "Check it is not one of these. The same name cannot be repeated in the same department and sub-department.",
+      "useExisting": "Use this one"
+    },
+    "delete": {
+      "title": "Delete product",
+      "message": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+      "success": "Product deleted successfully.",
+      "error": "The product could not be deleted."
+    }
+  },
+  "productPhoto": {
+    "enlarge": "View photo",
+    "none": "No photo"
+  }
+}
